@@ -26,6 +26,9 @@ Then add bin/flo to your path.
 # If you want to see an html file of the converage report
 ./vendor/bin/phpunit --coverage-html=results/clover-html
 # open results/clover-html/index.html for html report.
+
+# CI: Generating reports for SonarQube
+./vendor/bin/phpunit --coverage-clover=reports/phpunit.coverage.xml --log-junit=reports/phpunit.xml
 ```
 
 ##requirements
