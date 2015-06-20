@@ -1,5 +1,6 @@
 vendor
-results
+reports
 .idea
+.sonar
 bin
 !bin/flo
