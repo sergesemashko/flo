@@ -6,7 +6,7 @@
 
 A php CLI application for managing PHP projects
 
-##building
+##Building
 
 ```php
 composer install
@@ -15,7 +15,7 @@ composer install
 Then add bin/flo to your path.
 
 
-##testing
+##Testing
 
 ```sh
 ./vendor/bin/phpunit
@@ -31,9 +31,20 @@ Then add bin/flo to your path.
 ./vendor/bin/phpunit --coverage-clover=reports/phpunit.coverage.xml --log-junit=reports/phpunit.xml
 ```
 
-##requirements
+##Requirements
 * >= PHP 5.5
 * [Hub](https://github.com/github/hub)
+
+##Initialization
+After installation if you want to use flo commands on a new project do the following:
+1) Obtain your Github token by clicking on your profile picture at the top right hand side -> Settings -> Personal access tokens ->
+Generate new token
+Then run on the command line the following command: 'flo config-set github_oauth_token your_github_token'
+
+2) Run 'flo project-setup' on the command line. This will prompt you for answers to certain questions. Answer the relevant questions correctly.
+This will create a flo.yml file in your project directory.
+
+3) Now, you can run all of the flo commands described below.
 
 ##List of commands
 ```bash
@@ -75,5 +86,6 @@ Available commands:
  run-script        Runs project-specific script for a particular event.
  self-update       Updates flo.phar to the latest version
  tag-deploy        Deploy a Tag on Acquia.
+ tag_release       Marks a Tag on Github as a production tag
  tag-pre-release   Marks a Tag on GitHub as a non-production tag.
 ```

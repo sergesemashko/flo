@@ -37,9 +37,9 @@ class ProjectSetup extends Command {
     }
 
     // Questions.
-    $org_question = new Question('Please enter the name of the GitHub organization: ', 'NBCUOTS');
-    $repo_question = new Question('Please enter the name github repository: ');
-    $shortname_question = new Question('Please enter the Publisher short name: ');
+    $org_question = new Question('Please enter the name of the GitHub organization/username: ', 'NBCUOTS');
+    $repo_question = new Question('Please enter the name of your github repository: ');
+    $shortname_question = new Question('Please enter project short name: ');
     $github_question = new Question('Please enter the GitHub git url: ');
     $acquia_question = new Question('Please enter the Acquia git url: ');
     $pull_request_question = new Question('Please enter the pull-request domain: ');
