@@ -98,6 +98,8 @@ class Application extends BaseApplication {
     $commands[] = new Command\PhpSyntaxChecker();
     $commands[] = new Command\PhpCodeStyleChecker();
     $commands[] = new Command\PullRequest\CertifyCommand();
+    $commands[] = new Command\PullRequest\CheckoutCommand();
+    $commands[] = new Command\PullRequest\CommentCommand();
     $commands[] = new Command\PullRequest\DeployCommand();
     $commands[] = new Command\PullRequest\DestroyCommand();
     $commands[] = new Command\PullRequest\IntegrationCommand();
