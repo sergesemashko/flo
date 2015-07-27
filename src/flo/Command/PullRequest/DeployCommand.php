@@ -62,6 +62,12 @@ class DeployCommand extends Command {
         null,
         InputOption::VALUE_NONE,
         'If set we will sync the database, otherwise we will do `drush psi`.'
+      )
+      ->addOption(
+        'checkout',
+        true,
+        InputOption::VALUE_OPTIONAL,
+        'It will checkout code from the latest commit in Pull Request.'
       );
   }
 
@@ -97,26 +103,10 @@ class DeployCommand extends Command {
     $github = $this->getGithub();
 
     $site_dir = $input->getOption('site-dir');
+    $checkout = $input->getOption('checkout');
     $pr_number = $input->getArgument('pull-request');
     if (!is_numeric($pr_number)) {
       throw new \Exception("PR must be a number.");
-    }
-
-    // We always run from the top git directory.
-    $git_root = new Process('git rev-parse --show-toplevel');
-    $git_root->run();
-    if (!$git_root->isSuccessful()) {
-      throw new \RuntimeException($git_root->getErrorOutput());
-    }
-
-    $current_dir = new Process('pwd');
-    $current_dir->run();
-    if (!$current_dir->isSuccessful()) {
-      throw new \RuntimeException($current_dir->getErrorOutput());
-    }
-
-    if ($git_root->getOutput() !== $current_dir->getOutput()) {
-      throw new \Exception("You must run pr-deploy from the git root.");
     }
 
     // Lets rsync this workspace now.
@@ -126,12 +116,6 @@ class DeployCommand extends Command {
     $pr_directories = $this->getConfigParameter('pr_directories');
     if (empty($pr_directories)) {
       throw new \Exception("You must have a pr_directory set in your flo config.");
-    }
-
-    $command = "rsync -qrltoD --delete --exclude='.git/*' . {$pr_directories}{$path}";
-    if ($output->getVerbosity() == OutputInterface::VERBOSITY_VERY_VERBOSE) {
-      $output->writeln("<info>rsync: {$command}");
-      $output->writeln("<info>verbose: Syncing current directory into pr env.</info>");
     }
 
     // If they have an env set then we also tag it on github.
@@ -151,10 +135,12 @@ class DeployCommand extends Command {
       );
     }
 
-    $process = new Process($command);
-    $process->run();
-    if (!$process->isSuccessful()) {
-      throw new \RuntimeException($process->getErrorOutput());
+    if ($checkout) {
+      if ($output->getVerbosity() == OutputInterface::VERBOSITY_VERY_VERBOSE) {
+        $this->writeln("<info>rsync to {$pr_directories}{$path}");
+        $this->writeln("<info>verbose: Syncing current directory into pr env.</info>");
+      }
+      $this->checkoutWorkspace($pr_directories . $path);
     }
 
     // Lets generate the settings.local.php file.

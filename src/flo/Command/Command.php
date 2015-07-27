@@ -195,4 +195,26 @@ class Command extends \Symfony\Component\Console\Command\Command {
       throw new \Exception("You must run {$this->getName()} from the git root.");
     }
   }
+
+  /**
+   * Helper to checkout the code to workspace environment.
+   *
+   * @param string $pathTo
+   *   Target folder path
+   *
+   * @throws \Exception
+   */
+  protected function checkoutWorkspace($pathTo) {
+    if (empty($pathTo) || !is_string($pathTo)) {
+      throw new \Exception('$pathTo must be a target folder path string.');
+    }
+    $this->checkGitRoot();
+    $command = "rsync -qrltoD --delete --exclude='.git/*' . {$pathTo}";
+
+    $process = new Process($command);
+    $process->run();
+    if (!$process->isSuccessful()) {
+      throw new \RuntimeException($process->getErrorOutput());
+    }
+  }
 }

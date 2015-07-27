@@ -4,7 +4,6 @@ namespace flo\Command\PullRequest;
 
 use flo\Drupal;
 use flo\Command\Command;
-use Symfony\Component\Process\Process;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -43,23 +42,6 @@ class CheckoutCommand extends Command {
       throw new \Exception("PR must be a number.");
     }
 
-    // We always run from the top git directory.
-    $git_root = new Process('git rev-parse --show-toplevel');
-    $git_root->run();
-    if (!$git_root->isSuccessful()) {
-      throw new \RuntimeException($git_root->getErrorOutput());
-    }
-
-    $current_dir = new Process('pwd');
-    $current_dir->run();
-    if (!$current_dir->isSuccessful()) {
-      throw new \RuntimeException($current_dir->getErrorOutput());
-    }
-
-    if ($git_root->getOutput() !== $current_dir->getOutput()) {
-      throw new \Exception("You must run pr-deploy from the git root.");
-    }
-
     // Lets rsync this workspace now.
     $pull_request = $this->getConfigParameter('pull_request');
     $path = "{$pull_request['prefix']}-{$pr_number}.{$pull_request['domain']}";
@@ -68,12 +50,13 @@ class CheckoutCommand extends Command {
       throw new \Exception("You must have a pr_directory set in your flo config.");
     }
 
-    $command = "rsync -qrltoD --delete --exclude='.git/*' . {$pr_directories}{$path}";
     if ($output->getVerbosity() == OutputInterface::VERBOSITY_VERY_VERBOSE) {
-      $output->writeln("<info>rsync: {$command}");
+      $output->writeln("<info>rsyncing to {$pr_directories}{$path}");
       $output->writeln("<info>verbose: Syncing current directory into pr env.</info>");
     }
 
-    $output->writeln("<info>PR #$pr_number has been checkouted to {$pr_directories}{$path}.</info>");
+    $this->checkoutWorkspace($pr_directories . $path);
+
+    $output->writeln("<info>PR #$pr_number has been checked out into {$pr_directories}{$path}.</info>");
   }
 }
