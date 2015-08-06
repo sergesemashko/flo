@@ -105,6 +105,7 @@ class Application extends BaseApplication {
     $commands[] = new Command\PullRequest\IntegrationCommand();
     $commands[] = new Command\PullRequest\PostPoneCommand();
     $commands[] = new Command\PullRequest\RejectCommand();
+    $commands[] = new Command\PullRequest\StatusCommand();
     $commands[] = new Command\PullRequest\UnPostPoneCommand();
     $commands[] = new Command\PullRequest\UnRejectCommand();
     $commands[] = new Command\PullRequestStatus\PhpUnitChecker();
