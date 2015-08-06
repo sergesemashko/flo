@@ -76,11 +76,14 @@ Available commands:
  new-release       Updates a version file (e.g. version.php), commits that change and tags the commit for release.
  new-relic         Deploy a tag to new-relic.
  pr-certify        Certify a specific pull-request.
+ pr-checkout       Copies files to specified folder from workspace.
+ pr-comment        Posts a comment to pull-request.
  pr-deploy         Deploy a specific pull-request to a solo environment.
  pr-destroy        Destroy pull-request environment(s), removing its web root and database.
  pr-integration    Pull all valid PRs into the acquia integration branch.
  pr-postpone       Postpone a specific pull-request.
  pr-reject         Reject a specific pull-request.
+ pr-status         Posts a status to pull-request.
  pr-unpostpone     Un-postpone a specific pull-request.
  pr-unreject       Un-reject a specific pull-request.
  run-script        Runs project-specific script for a particular event.
